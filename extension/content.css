@@ -1,0 +1,45 @@
+.foreverscreen-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;
+}
+
+.foreverscreen-button img {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.foreverscreen-button:hover img {
+  filter: brightness(1.2) drop-shadow(0 0 3px #f2c14e);
+}
+
+#foreverscreen-toast {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 2147483647;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 16px;
+  border: 2px solid #c9922e;
+  border-radius: 8px;
+  background: #1d1608;
+  color: #f6e7c1;
+  font: 500 14px/1.4 Roboto, Arial, sans-serif;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+#foreverscreen-toast.foreverscreen-toast-show {
+  opacity: 1;
+  transform: none;
+}
+
+#foreverscreen-toast.foreverscreen-toast-error {
+  border-color: #b3261e;
+}

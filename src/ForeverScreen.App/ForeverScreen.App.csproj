@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- A tray app without a console; the log is in %LOCALAPPDATA%\ForeverScreen\logs and in the tray menu. -->
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>ForeverScreen</AssemblyName>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Kestrel for the local API on 127.0.0.1 that the browser extension calls. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.*" />
+    <PackageReference Include="TomLabs.PixelBridge.Host" Version="0.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ForeverScreen.Core\ForeverScreen.Core.csproj" />
+  </ItemGroup>
+</Project>
