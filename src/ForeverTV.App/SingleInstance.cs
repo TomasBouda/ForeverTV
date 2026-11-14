@@ -1,15 +1,15 @@
 using System.IO.Pipes;
 using System.Text;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>
-/// One ForeverScreen per Windows user. A second start hands its arguments (a video link) to the running one over a
+/// One ForeverTV per Windows user. A second start hands its arguments (a video link) to the running one over a
 /// named pipe and exits.
 /// </summary>
 internal sealed class SingleInstance : IDisposable
 {
-    private static readonly string Name = "ForeverScreen-" + Environment.UserName;
+    private static readonly string Name = "ForeverTV-" + Environment.UserName;
     private readonly Mutex _mutex;
     private readonly CancellationTokenSource _stop = new();
 

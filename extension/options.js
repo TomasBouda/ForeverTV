@@ -16,20 +16,20 @@ function say(text, kind) {
 async function test(settings) {
   const health = await callApp(settings, 'GET', '/health');
   if (health.kind !== 'ok') {
-    say(`ForeverScreen is not running on port ${settings.port}. Start it and test again.`, 'error');
+    say(`ForeverTV is not running on port ${settings.port}. Start it and test again.`, 'error');
     return;
   }
   const status = await callApp(settings, 'GET', '/status');
   if (status.kind === 'unpaired') {
-    say(settings.token ? 'ForeverScreen refused the token. Copy it again: tray menu, Pair browser.' : 'Paste the token first.', 'error');
+    say(settings.token ? 'ForeverTV refused the token. Copy it again: tray menu, Pair browser.' : 'Paste the token first.', 'error');
     return;
   }
   if (status.kind !== 'ok') {
-    say(`ForeverScreen answered ${status.status}.`, 'error');
+    say(`ForeverTV answered ${status.status}.`, 'error');
     return;
   }
   const now = status.data?.title ? ` Now: ${status.data.title}.` : '';
-  say(`Paired with ForeverScreen ${health.data?.version ?? ''}.${now}`, 'ok');
+  say(`Paired with ForeverTV ${health.data?.version ?? ''}.${now}`, 'ok');
 }
 
 show.addEventListener('change', () => { token.type = show.checked ? 'text' : 'password'; });

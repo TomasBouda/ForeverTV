@@ -8,3 +8,4 @@
 - [0006. A tray app with a local API on 127.0.0.1 replaces the console](0006-tray-app-with-local-api.md)
 - [0007. A Manifest V3 browser extension sends YouTube videos to the tray app](0007-browser-extension.md)
 - [0008. The video stays directly above WoW when WoW is not the active window](0008-video-stays-above-wow-out-of-focus.md)
+- [0009. The project is renamed from ForeverScreen to ForeverTV](0009-renamed-to-forevertv.md)

@@ -1,4 +1,4 @@
-namespace ForeverScreen.Core;
+namespace ForeverTV.Core;
 
 /// <summary>Where the video goes, in the game window's client coordinates.</summary>
 public readonly record struct VideoRect(int X, int Y, int Width, int Height)

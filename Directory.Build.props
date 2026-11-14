@@ -4,6 +4,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Authors>Tomas Bouda</Authors>
-    <Product>ForeverScreen</Product>
+    <Product>ForeverTV</Product>
   </PropertyGroup>
 </Project>

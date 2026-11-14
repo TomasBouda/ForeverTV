@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
-using ForeverScreen.Core;
+using ForeverTV.Core;
 using TomLabs.PixelBridge.Host;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>Copies a part of the game's client area from the screen with GDI. The cursor is not included.</summary>
 internal sealed class GdiRegionCapture : IRegionCapture

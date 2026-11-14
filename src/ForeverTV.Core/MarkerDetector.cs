@@ -1,4 +1,4 @@
-namespace ForeverScreen.Core;
+namespace ForeverTV.Core;
 
 public enum Corner { TopLeft, TopRight, BottomLeft, BottomRight }
 

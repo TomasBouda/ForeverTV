@@ -1,6 +1,6 @@
-using ForeverScreen.Core;
+using ForeverTV.Core;
 
-namespace ForeverScreen.Core.Tests;
+namespace ForeverTV.Core.Tests;
 
 /// <summary>A pretend game window. Tests paint a marker frame on it and hand it to the tracker as its capture.</summary>
 public sealed class FakeScreen(int width, int height) : IRegionCapture

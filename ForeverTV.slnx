@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ForeverTV.App/ForeverTV.App.csproj" />
+    <Project Path="src/ForeverTV.Core/ForeverTV.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ForeverTV.Core.Tests/ForeverTV.Core.Tests.csproj" />
+  </Folder>
+</Solution>

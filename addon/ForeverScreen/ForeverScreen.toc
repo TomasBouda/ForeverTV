@@ -1,8 +1,0 @@
-## Interface: 16001
-## Title: ForeverScreen
-## Notes: Prototype: a frame with corner markers that the ForeverScreen desktop app follows with its video window. /fscreen
-## Author: Tomas Bouda
-## Version: 0.1.0-dev
-## SavedVariables: ForeverScreenDB
-
-ForeverScreen.lua

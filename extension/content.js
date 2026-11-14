@@ -1,7 +1,7 @@
 // YouTube page: a "Play in WoW" button in the player bar, the current video and second for the toolbar button and
 // context menu, pausing after a send, and a short toast with the result.
 (() => {
-  const BUTTON_CLASS = 'foreverscreen-button';
+  const BUTTON_CLASS = 'forevertv-button';
   const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
   const PLAYLIST_ID = /^[A-Za-z0-9_-]{2,64}$/;
 
@@ -47,18 +47,18 @@
 
   let toastTimer;
   function toast(text, ok) {
-    let box = document.getElementById('foreverscreen-toast');
+    let box = document.getElementById('forevertv-toast');
     if (!box) {
       box = document.createElement('div');
-      box.id = 'foreverscreen-toast';
+      box.id = 'forevertv-toast';
       box.setAttribute('role', 'status');
       document.body.appendChild(box);
     }
     box.textContent = text;
-    box.classList.toggle('foreverscreen-toast-error', !ok);
-    box.classList.add('foreverscreen-toast-show');
+    box.classList.toggle('forevertv-toast-error', !ok);
+    box.classList.add('forevertv-toast-show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => box.classList.remove('foreverscreen-toast-show'), ok ? 3500 : 7000);
+    toastTimer = setTimeout(() => box.classList.remove('forevertv-toast-show'), ok ? 3500 : 7000);
   }
 
   function sendCurrent() {
@@ -71,7 +71,7 @@
       chrome.runtime.sendMessage({ type: 'play', request });
     } catch {
       // The extension was reloaded or updated; this page still runs the old script.
-      toast('ForeverScreen extension was updated. Reload this page.', false);
+      toast('ForeverTV extension was updated. Reload this page.', false);
     }
   }
 

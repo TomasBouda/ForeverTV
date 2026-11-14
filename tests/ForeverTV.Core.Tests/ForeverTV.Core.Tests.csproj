@@ -10,7 +10,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ForeverScreen.Core\ForeverScreen.Core.csproj" />
+    <ProjectReference Include="..\..\src\ForeverTV.Core\ForeverTV.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />

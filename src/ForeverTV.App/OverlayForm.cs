@@ -1,12 +1,12 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using ForeverScreen.Core;
+using ForeverTV.Core;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>
 /// The window over the game: always on top, never takes focus, lets every click through and is left out of screen
@@ -30,7 +30,7 @@ internal sealed class OverlayForm : Form
     private static readonly nint HWND_TOPMOST = -1;
     private static readonly nint HWND_NOTOPMOST = -2;
 
-    private const string Origin = "https://foreverscreen.local";
+    private const string Origin = "https://forevertv.local";
 
     private bool _muted;
     private readonly System.Windows.Forms.Timer _repaint = new() { Interval = 50 };
@@ -188,8 +188,8 @@ internal sealed class OverlayForm : Form
         e.Graphics.FillRectangle(bar, _sweep, 0, 8, ClientSize.Height);
         using var font = new Font("Consolas", 11f);
         var heading = _current is null
-            ? "ForeverScreen - no video yet\nTray icon: Paste YouTube link, or Play in WoW in the browser."
-            : "ForeverScreen" + (_playing ? "" : " - PAUSED");
+            ? "ForeverTV - no video yet\nTray icon: Paste YouTube link, or Play in WoW in the browser."
+            : "ForeverTV" + (_playing ? "" : " - PAUSED");
         e.Graphics.DrawString(heading + "\n" + _stats, font, Brushes.White, 12, 12);
     }
 
@@ -214,7 +214,7 @@ internal sealed class OverlayForm : Form
             loaded.TrySetResult();
         };
         view.CoreWebView2.WebMessageReceived += (_, args) => OnPageMessage(args.TryGetWebMessageAsString());
-        view.CoreWebView2.SetVirtualHostNameToFolderMapping("foreverscreen.local", pageFolder, CoreWebView2HostResourceAccessKind.Allow);
+        view.CoreWebView2.SetVirtualHostNameToFolderMapping("forevertv.local", pageFolder, CoreWebView2HostResourceAccessKind.Allow);
         view.CoreWebView2.Navigate(Origin + "/player.html");
         await loaded.Task;
         _repaint.Stop();

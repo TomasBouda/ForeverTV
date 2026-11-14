@@ -19,7 +19,7 @@ python tools/TVArt/make-art.py
 ```
 
 The script reads the saved masters, recreates the five delivery PNGs here and the matching `.tga` files in
-`addon/ForeverScreen/art/`, then writes `preview.png`. The script uses no network, game directory or desktop capture.
+`addon/ForeverTV/art/`, then writes `preview.png`. The script uses no network, game directory or desktop capture.
 All TGA files are power-of-two, uncompressed true-colour (type 2), 32-bit BGRA, bottom-up, with eight alpha bits and
 no colour map or image ID. PNG intermediates retain RGBA. Pillow is the only external build dependency.
 
@@ -80,7 +80,7 @@ crop `(672,700,1196,1120)` is resized to 58 x 46 at `(67,73)`. All four controls
 
 TUNE calls `SetPaused`; its atlas UV changes whenever saved state or a playback command refreshes the state cell.
 Two painted states use the existing `SetTexCoord` API without a texture-rotation dependency. Power calls the
-original frame's `Hide`; `/fscreen` shows it again. The crank shares the original grip's resize/save handlers.
+original frame's `Hide`; `/ftv` shows it again. The crank shares the original grip's resize/save handlers.
 GameTooltip explains all three controls. Rail dragging continues to move the frame. Switching skins or hiding
 the frame releases active resizing and dragging. TV mode hides title counters, plain buttons, footer help, the
 grey grip and waiting text. Switching it off restores those elements.
@@ -93,7 +93,7 @@ unchanged marker/frame geometry at minimum/default/large sizes, saved toggle sta
 play/pause, both pointer states, plain-control visibility, power, tooltips and resize interruption. Run:
 
 ```powershell
-dotnet test ForeverScreen.slnx
+dotnet test ForeverTV.slnx
 ```
 
 `preview.png` is an offline composition showing default/playing and minimum/paused sizes, enlarged pointer states

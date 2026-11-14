@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent
-ART = HERE.parent.parent / "addon" / "ForeverScreen" / "art"
+ART = HERE.parent.parent / "addon" / "ForeverTV" / "art"
 LANCZOS = Image.Resampling.LANCZOS
 
 
@@ -171,7 +171,7 @@ def preview(textures):
         paste_piece("badge", (0,0,146,24), (bx,y-26), (146,24))
         draw.text((bx+40,y-20), "BILGEBOX", font=small, fill="#482407", stroke_width=0)
 
-    label(30, 20, "FOREVERSCREEN / BILGEBOX - painted brass + copper")
+    label(30, 20, "FOREVERTV / BILGEBOX - painted brass + copper")
     label(30, 49, "Offline composition. TUNE toggles playback; power hides the frame; brass crank resizes.", small)
     tv(60, 215, 652, 420)
     label(40, 680, "Default: original frame 652 x 420; rails 28 / 22 / 22 / 60 px")

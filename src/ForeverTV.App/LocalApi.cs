@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
-using ForeverScreen.Core;
+using ForeverTV.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>What the local API can do with the screen. Called from web server threads.</summary>
 internal interface IScreenControl
@@ -44,7 +44,7 @@ internal sealed class LocalApi : IAsyncDisposable
         });
         var app = builder.Build();
 
-        app.MapGet("/health", () => Results.Json(new { status = "Healthy", version, name = "ForeverScreen" }));
+        app.MapGet("/health", () => Results.Json(new { status = "Healthy", version, name = "ForeverTV" }));
 
         var api = app.MapGroup("/").AddEndpointFilter(async (context, next) =>
         {

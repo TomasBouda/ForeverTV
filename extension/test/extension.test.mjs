@@ -60,7 +60,7 @@ test('results map to clear messages', async () => {
   assert.equal((await callApp({ token: 't' }, 'GET', '/status', undefined, async () => { throw new TypeError('refused'); })).kind, 'offline');
   const bad = await callApp({ token: 't' }, 'POST', '/play', {}, fakeFetch(400, { error: 'Not a YouTube video link.' }, []));
   assert.equal(describe(bad), 'Not a YouTube video link.');
-  assert.match(describe({ kind: 'ok', data: { tvVisible: false } }), /\/fscreen/);
+  assert.match(describe({ kind: 'ok', data: { tvVisible: false } }), /\/ftv/);
 });
 
 test('manifest asks only for the planned permissions', () => {

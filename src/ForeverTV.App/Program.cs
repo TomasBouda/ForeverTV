@@ -3,13 +3,13 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using ForeverScreen.Core;
+using ForeverTV.Core;
 using TomLabs.PixelBridge.Host;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 // Tray app: follows the addon's markers with a click-through video window over WoW.
-// Usage: ForeverScreen [<YouTube link or id>] [--video <link or id>] [--mute]
+// Usage: ForeverTV [<YouTube link or id>] [--video <link or id>] [--mute]
 // A second start hands its video to the running one.
 internal static class Program
 {
@@ -25,7 +25,7 @@ internal static class Program
         var version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
         var logFolder = Path.Combine(AppSettings.Folder, "logs");
         Directory.CreateDirectory(logFolder);
-        var logPath = Path.Combine(logFolder, $"foreverscreen-{DateTime.Now:yyyy-MM-dd}.log");
+        var logPath = Path.Combine(logFolder, $"forevertv-{DateTime.Now:yyyy-MM-dd}.log");
         using var log = TextWriter.Synchronized(new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)) { AutoFlush = true });
 
         void Report(string line)
@@ -35,7 +35,7 @@ internal static class Program
             log.WriteLine(stamped);
         }
 
-        Report($"ForeverScreen {version} started, data folder {AppSettings.Folder}");
+        Report($"ForeverTV {version} started, data folder {AppSettings.Folder}");
 
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
@@ -55,12 +55,12 @@ internal static class Program
         var tray = new NotifyIcon
         {
             Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!) ?? SystemIcons.Application,
-            Text = "ForeverScreen",
+            Text = "ForeverTV",
             Visible = true,
             ContextMenuStrip = new ContextMenuStrip(),
         };
 
-        void Toast(string text, ToolTipIcon icon = ToolTipIcon.Info) => tray.ShowBalloonTip(5000, "ForeverScreen", text, icon);
+        void Toast(string text, ToolTipIcon icon = ToolTipIcon.Info) => tray.ShowBalloonTip(5000, "ForeverTV", text, icon);
 
         // Every way in (tray menu, API, a second start) ends here, on the UI thread.
         void PlayNow(VideoRequest request, string source)
@@ -71,7 +71,7 @@ internal static class Program
             overlay.Play(request, playing: visible);
             Volatile.Write(ref resync, true);
             settings.Remember(request, currentTitle);
-            if (!visible) Toast("Video ready. Switch to WoW and open the TV (/fscreen); it starts there.");
+            if (!visible) Toast("Video ready. Switch to WoW and open the TV (/ftv); it starts there.");
         }
 
         void SetPausedNow(bool paused, string source)
@@ -115,7 +115,7 @@ internal static class Program
             catch (Exception exception)
             {
                 Report($"Local API failed on port {settings.Port}: {exception.Message}");
-                Toast($"Port {settings.Port} is taken, so the browser cannot reach ForeverScreen. Change Port in settings.json.", ToolTipIcon.Warning);
+                Toast($"Port {settings.Port} is taken, so the browser cannot reach ForeverTV. Change Port in settings.json.", ToolTipIcon.Warning);
             }
             if (StartRequest(args) is { } first) PlayNow(first, "command line");
         };
@@ -137,7 +137,7 @@ internal static class Program
         {
             var menu = tray.ContextMenuStrip!;
             menu.Items.Clear();
-            menu.Items.Add(new ToolStripMenuItem($"ForeverScreen {version}") { Enabled = false });
+            menu.Items.Add(new ToolStripMenuItem($"ForeverTV {version}") { Enabled = false });
             var now = overlay.Current is null ? "No video" : currentTitle ?? overlay.Current.VideoId;
             menu.Items.Add(new ToolStripMenuItem((overlay.Playing && overlay.Current is not null ? "Playing: " : "Paused: ") + Shorten(now)) { Enabled = false, Visible = overlay.Current is not null });
             menu.Items.Add(new ToolStripSeparator());

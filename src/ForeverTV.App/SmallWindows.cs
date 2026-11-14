@@ -2,13 +2,13 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>The current user's Run key. Off until switched on from the tray menu.</summary>
 internal static class StartWithWindows
 {
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string ValueName = "ForeverScreen";
+    private const string ValueName = "ForeverTV";
 
     public static bool IsOn
     {
@@ -35,7 +35,7 @@ internal static class LinkPrompt
     {
         using var form = new Form
         {
-            Text = "ForeverScreen - play in WoW",
+            Text = "ForeverTV - play in WoW",
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MaximizeBox = false,
             MinimizeBox = false,
@@ -71,7 +71,7 @@ internal sealed class LogWindow : Form
     public LogWindow(string folder)
     {
         _folder = folder;
-        Text = "ForeverScreen - log";
+        Text = "ForeverTV - log";
         StartPosition = FormStartPosition.CenterScreen;
         ClientSize = new Size(900, 520);
         var bar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 40, Padding = new Padding(4) };

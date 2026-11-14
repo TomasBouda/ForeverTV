@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ForeverScreen.Core;
+namespace ForeverTV.Core;
 
 /// <summary>
 /// Decides whether a call to the local API may act. The API listens on 127.0.0.1 only, but any web page in the
@@ -10,7 +10,7 @@ namespace ForeverScreen.Core;
 /// </summary>
 public static class ApiGuard
 {
-    public const string TokenHeader = "X-ForeverScreen-Token";
+    public const string TokenHeader = "X-ForeverTV-Token";
 
     public static string NewToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(24))
         .Replace('+', '-').Replace('/', '_').TrimEnd('=');

@@ -1,6 +1,6 @@
-using ForeverScreen.Core;
+using ForeverTV.Core;
 
-namespace ForeverScreen.Core.Tests;
+namespace ForeverTV.Core.Tests;
 
 public class MarkerTests
 {

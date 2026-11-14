@@ -1,7 +1,7 @@
 using System.Text.Json;
-using ForeverScreen.Core;
+using ForeverTV.Core;
 
-namespace ForeverScreen.App;
+namespace ForeverTV.App;
 
 /// <summary>What the tray app remembers, in settings.json next to the logs.</summary>
 internal sealed class AppSettings
@@ -13,10 +13,27 @@ internal sealed class AppSettings
     public bool Muted { get; set; }
     public List<RecentVideo> Recent { get; set; } = [];
 
-    /// <summary>%LOCALAPPDATA%\ForeverScreen, or FOREVERSCREEN_HOME for a test run that must not touch the real one.</summary>
-    public static string Folder { get; } = Environment.GetEnvironmentVariable("FOREVERSCREEN_HOME") is { Length: > 0 } home
+    /// <summary>%LOCALAPPDATA%\ForeverTV, or FOREVERTV_HOME for a test run that must not touch the real one.</summary>
+    public static string Folder { get; } = Environment.GetEnvironmentVariable("FOREVERTV_HOME") is { Length: > 0 } home
         ? home
-        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ForeverScreen");
+        : DefaultFolder();
+
+    // The app was called ForeverScreen before ADR 0009; move its folder once so the pairing token and recent videos stay.
+    private static string DefaultFolder()
+    {
+        var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var folder = Path.Combine(local, "ForeverTV");
+        var old = Path.Combine(local, "ForeverScreen");
+        try
+        {
+            if (!Directory.Exists(folder) && Directory.Exists(old)) Directory.Move(old, folder);
+        }
+        catch (IOException)
+        {
+            // Old folder in use (an old instance still running); start fresh, the old folder stays as it was.
+        }
+        return folder;
+    }
 
     private static string FilePath => Path.Combine(Folder, "settings.json");
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };

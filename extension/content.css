@@ -1,22 +1,22 @@
-.foreverscreen-button {
+.forevertv-button {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   vertical-align: top;
 }
 
-.foreverscreen-button img {
+.forevertv-button img {
   width: 26px;
   height: 26px;
   border-radius: 4px;
   pointer-events: none;
 }
 
-.foreverscreen-button:hover img {
+.forevertv-button:hover img {
   filter: brightness(1.2) drop-shadow(0 0 3px #f2c14e);
 }
 
-#foreverscreen-toast {
+#forevertv-toast {
   position: fixed;
   top: 72px;
   right: 24px;
@@ -35,11 +35,11 @@
   pointer-events: none;
 }
 
-#foreverscreen-toast.foreverscreen-toast-show {
+#forevertv-toast.forevertv-toast-show {
   opacity: 1;
   transform: none;
 }
 
-#foreverscreen-toast.foreverscreen-toast-error {
+#forevertv-toast.forevertv-toast-error {
   border-color: #b3261e;
 }

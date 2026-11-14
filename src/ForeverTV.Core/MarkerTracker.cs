@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace ForeverScreen.Core;
+namespace ForeverTV.Core;
 
 public interface IRegionCapture
 {

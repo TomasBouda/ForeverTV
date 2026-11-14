@@ -1,26 +1,26 @@
 using System.Text.RegularExpressions;
 using MoonSharp.Interpreter;
 
-namespace ForeverScreen.Core.Tests;
+namespace ForeverTV.Core.Tests;
 
 public class AddonSourceTests
 {
     private static string RepositoryPath(params string[] path)
     {
         var folder = new DirectoryInfo(AppContext.BaseDirectory);
-        while (folder is not null && !File.Exists(Path.Combine(folder.FullName, "ForeverScreen.slnx"))) folder = folder.Parent;
+        while (folder is not null && !File.Exists(Path.Combine(folder.FullName, "ForeverTV.slnx"))) folder = folder.Parent;
         return Path.Combine([folder!.FullName, .. path]);
     }
 
     private static string ReadRepositoryFile(params string[] path) => File.ReadAllText(RepositoryPath(path));
 
-    private static string Source() => ReadRepositoryFile("addon", "ForeverScreen", "ForeverScreen.lua");
+    private static string Source() => ReadRepositoryFile("addon", "ForeverTV", "ForeverTV.lua");
 
     private static Script RunAddon(string savedVariables = "{}")
     {
         var script = new Script();
-        script.DoString(ReadRepositoryFile("tests", "ForeverScreen.Core.Tests", "AddonTestHost.lua"));
-        script.DoString("ForeverScreenDB = " + savedVariables);
+        script.DoString(ReadRepositoryFile("tests", "ForeverTV.Core.Tests", "AddonTestHost.lua"));
+        script.DoString("ForeverTVDB = " + savedVariables);
         script.DoString(Source());
         script.DoString("Login()");
         return script;
@@ -54,7 +54,7 @@ public class AddonSourceTests
             ["antenna"] = (128, 128), ["badge"] = (256, 32), ["switches"] = (128, 128)
         };
         var referenced = new HashSet<string>();
-        const string prefix = @"Interface\AddOns\ForeverScreen\art\";
+        const string prefix = @"Interface\AddOns\ForeverTV\art\";
         foreach (var value in script.Globals.Get("Objects").Table.Values)
         {
             var texture = value.Table.Get("texture");
@@ -71,7 +71,7 @@ public class AddonSourceTests
         Assert.Equal(expected.Keys.Order(), referenced.Order());
         foreach (var (name, size) in expected)
         {
-            var bytes = File.ReadAllBytes(RepositoryPath("addon", "ForeverScreen", "art", name + ".tga"));
+            var bytes = File.ReadAllBytes(RepositoryPath("addon", "ForeverTV", "art", name + ".tga"));
             Assert.Equal(0, bytes[0]); // No image ID.
             Assert.Equal(0, bytes[1]); // No colour map.
             Assert.Equal(2, bytes[2]); // Uncompressed true colour.
@@ -91,18 +91,18 @@ public class AddonSourceTests
     {
         var script = RunAddon("nil");
         script.DoString("""
-            assert(not ForeverScreenTVSkin:IsShown())
-            assert(ForeverScreenDB.skin == nil)
+            assert(not ForeverTVSkin:IsShown())
+            assert(ForeverTVDB.skin == nil)
             local before = OriginalGeometry()
             Combat = true
-            SlashCmdList.FOREVERSCREEN("tv")
-            assert(ForeverScreenDB.skin == "tv")
-            assert(ForeverScreenTVSkin:IsShown())
-            assert(not ForeverScreenFrame:IsShown())
+            SlashCmdList.FOREVERTV("tv")
+            assert(ForeverTVDB.skin == "tv")
+            assert(ForeverTVSkin:IsShown())
+            assert(not ForeverTVFrame:IsShown())
             assert(OriginalGeometry() == before)
-            SlashCmdList.FOREVERSCREEN("tv")
-            assert(ForeverScreenDB.skin == nil)
-            assert(not ForeverScreenTVSkin:IsShown())
+            SlashCmdList.FOREVERTV("tv")
+            assert(ForeverTVDB.skin == nil)
+            assert(not ForeverTVSkin:IsShown())
             assert(OriginalGeometry() == before)
             """);
     }
@@ -112,15 +112,15 @@ public class AddonSourceTests
     {
         var script = RunAddon("{ skin = 'tv', paused = true, shown = true, width = 800, height = 500 }");
         script.DoString("""
-            assert(ForeverScreenTVSkin:IsShown())
-            assert(ForeverScreenFrame:IsShown())
-            assert(ForeverScreenFrame:GetWidth() == 800 and ForeverScreenFrame:GetHeight() == 500)
+            assert(ForeverTVSkin:IsShown())
+            assert(ForeverTVFrame:IsShown())
+            assert(ForeverTVFrame:GetWidth() == 800 and ForeverTVFrame:GetHeight() == 500)
             Combat = true
             local geometry = OriginalGeometry()
-            SlashCmdList.FOREVERSCREEN("tv")
-            SlashCmdList.FOREVERSCREEN("tv")
+            SlashCmdList.FOREVERTV("tv")
+            SlashCmdList.FOREVERTV("tv")
             assert(OriginalGeometry() == geometry)
-            assert(ForeverScreenFrame:IsShown() and ForeverScreenDB.paused)
+            assert(ForeverTVFrame:IsShown() and ForeverTVDB.paused)
             local play, grip, state
             for _, object in ipairs(Objects) do
                 if object.template == "UIPanelButtonTemplate" then play = object end
@@ -130,40 +130,40 @@ public class AddonSourceTests
                 end
             end
             assert(play.text == "Play" and state.colours[1][3] == 1)
-            SlashCmdList.FOREVERSCREEN("play")
-            assert(not ForeverScreenDB.paused and play.text == "Pause" and state.colours[1][3] == 0)
-            SlashCmdList.FOREVERSCREEN("pause")
-            assert(ForeverScreenDB.paused and play.text == "Play" and state.colours[1][3] == 1)
+            SlashCmdList.FOREVERTV("play")
+            assert(not ForeverTVDB.paused and play.text == "Pause" and state.colours[1][3] == 0)
+            SlashCmdList.FOREVERTV("pause")
+            assert(ForeverTVDB.paused and play.text == "Play" and state.colours[1][3] == 1)
             play.scripts.OnClick(play)
-            assert(not ForeverScreenDB.paused and play.text == "Pause")
-            SlashCmdList.FOREVERSCREEN("")
-            assert(not ForeverScreenFrame:IsShown() and not ForeverScreenDB.shown)
-            SlashCmdList.FOREVERSCREEN("tv")
-            SlashCmdList.FOREVERSCREEN("tv")
-            assert(not ForeverScreenFrame:IsShown() and ForeverScreenDB.skin == "tv")
-            SlashCmdList.FOREVERSCREEN("")
-            assert(ForeverScreenFrame:IsShown() and ForeverScreenDB.shown)
+            assert(not ForeverTVDB.paused and play.text == "Pause")
+            SlashCmdList.FOREVERTV("")
+            assert(not ForeverTVFrame:IsShown() and not ForeverTVDB.shown)
+            SlashCmdList.FOREVERTV("tv")
+            SlashCmdList.FOREVERTV("tv")
+            assert(not ForeverTVFrame:IsShown() and ForeverTVDB.skin == "tv")
+            SlashCmdList.FOREVERTV("")
+            assert(ForeverTVFrame:IsShown() and ForeverTVDB.shown)
             local rail
             for _, object in ipairs(Objects) do
-                if object.parent == ForeverScreenTVSkin and object.mouse then
+                if object.parent == ForeverTVSkin and object.mouse then
                     rail = object
                     assert(object.drag == "LeftButton")
                     object.scripts.OnDragStart(object)
-                    assert(ForeverScreenFrame.movement == "moving")
+                    assert(ForeverTVFrame.movement == "moving")
                     object.scripts.OnDragStop(object)
-                    assert(ForeverScreenFrame.movement == nil)
+                    assert(ForeverTVFrame.movement == nil)
                 end
             end
             assert(rail)
             rail.scripts.OnDragStart(rail)
-            SlashCmdList.FOREVERSCREEN("tv")
-            assert(ForeverScreenFrame.movement == nil and not ForeverScreenFrame.moving)
-            SlashCmdList.FOREVERSCREEN("tv")
+            SlashCmdList.FOREVERTV("tv")
+            assert(ForeverTVFrame.movement == nil and not ForeverTVFrame.moving)
+            SlashCmdList.FOREVERTV("tv")
             grip.scripts.OnMouseDown(grip)
-            assert(ForeverScreenFrame.movement == "BOTTOMRIGHT")
+            assert(ForeverTVFrame.movement == "BOTTOMRIGHT")
             grip.scripts.OnMouseUp(grip)
-            assert(ForeverScreenFrame.movement == nil)
-            assert(ForeverScreenDB.width == 800 and ForeverScreenDB.height == 500)
+            assert(ForeverTVFrame.movement == nil)
+            assert(ForeverTVDB.width == 800 and ForeverTVDB.height == 500)
             """);
     }
 
@@ -177,11 +177,11 @@ public class AddonSourceTests
         script.Globals["TestWidth"] = width;
         script.Globals["TestHeight"] = height;
         script.DoString("""
-            ForeverScreenFrame:SetSize(TestWidth, TestHeight)
-            local frame = Bounds(ForeverScreenFrame)
+            ForeverTVFrame:SetSize(TestWidth, TestHeight)
+            local frame = Bounds(ForeverTVFrame)
             local markers = 0
             for _, object in ipairs(Objects) do
-                if IsDescendant(object, ForeverScreenTVSkin) then
+                if IsDescendant(object, ForeverTVSkin) then
                     if object.kind == "Texture" then
                         local art = Bounds(object)
                         assert(art.left + art.width <= frame.left or art.left >= frame.left + frame.width
@@ -223,11 +223,11 @@ public class AddonSourceTests
         script.DoString("""
             local plain = {}
             for _, object in ipairs(Objects) do
-                if object.parent == ForeverScreenFrame and
+                if object.parent == ForeverTVFrame and
                     (object.kind == "FontString" or object.template or object.scripts.OnMouseDown) then
                     table.insert(plain, object)
                 end
-                if object.kind == "FontString" and string.find(object.text or "", "Start the ForeverScreen") then
+                if object.kind == "FontString" and string.find(object.text or "", "Start the ForeverTV") then
                     table.insert(plain, object)
                 end
             end
@@ -237,10 +237,10 @@ public class AddonSourceTests
             for _, object in ipairs(plain) do assert(object:IsShown()) end
             Combat = true
             local geometry = OriginalGeometry()
-            SlashCmdList.FOREVERSCREEN("tv")
+            SlashCmdList.FOREVERTV("tv")
             for _, object in ipairs(plain) do assert(not object:IsShown()) end
             assert(OriginalGeometry() == geometry)
-            SlashCmdList.FOREVERSCREEN("tv")
+            SlashCmdList.FOREVERTV("tv")
             for _, object in ipairs(plain) do assert(object:IsShown()) end
             assert(OriginalGeometry() == geometry)
             """);
@@ -252,10 +252,10 @@ public class AddonSourceTests
     public void Casing_controls_drive_existing_pause_hide_resize_and_tooltip_behaviour(bool paused)
     {
         var script = RunAddon("{ skin = 'tv', shown = true, paused = " + (paused ? "true" : "false") + " }");
-        Assert.Matches(@"tune:SetScript\(""OnClick"", function\(\) SetPaused\(not ForeverScreenDB.paused\) end\)", Source());
+        Assert.Matches(@"tune:SetScript\(""OnClick"", function\(\) SetPaused\(not ForeverTVDB.paused\) end\)", Source());
         script.DoString("""
             Combat = true
-            local tune, power, crank = ForeverScreenTVTune, ForeverScreenTVPower, ForeverScreenTVResize
+            local tune, power, crank = ForeverTVTune, ForeverTVPower, ForeverTVResize
             local pointer, state
             for _, object in ipairs(Objects) do
                 if object.parent == tune then pointer = object end
@@ -263,17 +263,17 @@ public class AddonSourceTests
                     state = object
                 end
             end
-            local paused = ForeverScreenDB.paused
+            local paused = ForeverTVDB.paused
             assert(pointer.texCoords[1] == (paused and 0.5 or 0))
             tune.scripts.OnClick(tune)
-            assert(ForeverScreenDB.paused == not paused)
+            assert(ForeverTVDB.paused == not paused)
             assert(pointer.texCoords[1] == (paused and 0 or 0.5))
             assert(state.colours[1][3] == (paused and 0 or 1))
-            SlashCmdList.FOREVERSCREEN("pause")
+            SlashCmdList.FOREVERTV("pause")
             assert(pointer.texCoords[1] == 0.5 and state.colours[1][3] == 1)
-            SlashCmdList.FOREVERSCREEN("play")
+            SlashCmdList.FOREVERTV("play")
             assert(pointer.texCoords[1] == 0 and state.colours[1][3] == 0)
-            local messages = { "Play/Pause", "Power off (/fscreen to turn on)", "Drag to resize" }
+            local messages = { "Play/Pause", "Power off (/ftv to turn on)", "Drag to resize" }
             for index, control in ipairs({ tune, power, crank }) do
                 control.scripts.OnEnter(control)
                 assert(GameTooltip:IsShown() and GameTooltip:GetOwner() == control)
@@ -282,26 +282,26 @@ public class AddonSourceTests
                 assert(not GameTooltip:IsShown())
             end
             crank.scripts.OnMouseDown(crank, "LeftButton")
-            assert(ForeverScreenFrame.movement == "BOTTOMRIGHT" and ForeverScreenFrame.sizing)
-            ForeverScreenFrame:SetSize(800, 500)
+            assert(ForeverTVFrame.movement == "BOTTOMRIGHT" and ForeverTVFrame.sizing)
+            ForeverTVFrame:SetSize(800, 500)
             crank.scripts.OnMouseUp(crank, "LeftButton")
-            assert(ForeverScreenFrame.movement == nil and not ForeverScreenFrame.sizing)
-            assert(ForeverScreenDB.width == 800 and ForeverScreenDB.height == 500)
+            assert(ForeverTVFrame.movement == nil and not ForeverTVFrame.sizing)
+            assert(ForeverTVDB.width == 800 and ForeverTVDB.height == 500)
             crank.scripts.OnMouseDown(crank, "LeftButton")
             crank.scripts.OnEnter(crank)
-            SlashCmdList.FOREVERSCREEN("tv")
-            assert(ForeverScreenFrame.movement == nil and not ForeverScreenFrame.sizing)
+            SlashCmdList.FOREVERTV("tv")
+            assert(ForeverTVFrame.movement == nil and not ForeverTVFrame.sizing)
             assert(not GameTooltip:IsShown())
-            SlashCmdList.FOREVERSCREEN("tv")
+            SlashCmdList.FOREVERTV("tv")
             crank.scripts.OnMouseDown(crank, "LeftButton")
             power.scripts.OnEnter(power)
             power.scripts.OnClick(power)
-            assert(not ForeverScreenFrame:IsShown() and not ForeverScreenDB.shown)
-            assert(ForeverScreenFrame.movement == nil and not ForeverScreenFrame.sizing)
+            assert(not ForeverTVFrame:IsShown() and not ForeverTVDB.shown)
+            assert(ForeverTVFrame.movement == nil and not ForeverTVFrame.sizing)
             assert(not GameTooltip:IsShown())
-            SlashCmdList.FOREVERSCREEN("")
-            assert(ForeverScreenFrame:IsShown() and ForeverScreenDB.skin == "tv")
-            assert(not ForeverScreenDB.paused)
+            SlashCmdList.FOREVERTV("")
+            assert(ForeverTVFrame:IsShown() and ForeverTVDB.skin == "tv")
+            assert(not ForeverTVDB.paused)
             """);
     }
 }

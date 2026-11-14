@@ -1,5 +1,5 @@
 // Reads a YouTube video id, start second and playlist from a link. Mirrors VideoRequest.TryParse in
-// ForeverScreen.Core; the app parses again, so this only decides whether a link is worth sending.
+// ForeverTV.Core; the app parses again, so this only decides whether a link is worth sending.
 
 const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
 const PLAYLIST_ID = /^[A-Za-z0-9_-]{2,64}$/;

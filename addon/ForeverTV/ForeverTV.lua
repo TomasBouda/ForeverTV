@@ -1,4 +1,4 @@
--- ForeverScreen prototype. Draws a frame with four corner markers; the desktop app finds them on the screen and lays
+-- ForeverTV prototype. Draws a frame with four corner markers; the desktop app finds them on the screen and lays
 -- its click-through video window over the black area. Clicks on the video therefore land here. The counters in the
 -- title bar show whether they do, also in combat. The only thing the app reads besides the position is the play state
 -- cell right of the top-left marker. No game data is read or shown to the app.
@@ -17,7 +17,7 @@ local MAGENTA, GREEN, CYAN = { 1, 0, 1 }, { 0, 1, 0 }, { 0, 1, 1 }
 local clicks, wheels, combatClicks, moves = 0, 0, 0, 0
 local PLAY_BUTTON_WIDTH = 64
 
-local frame = CreateFrame("Frame", "ForeverScreenFrame", UIParent)
+local frame = CreateFrame("Frame", "ForeverTVFrame", UIParent)
 frame:Hide()
 frame:SetFrameStrata("MEDIUM")
 frame:SetMovable(true)
@@ -45,7 +45,7 @@ playButton:SetPoint("RIGHT", closeButton, "LEFT", -4, 0)
 
 local footer = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
 footer:SetPoint("LEFT", frame, "BOTTOMLEFT", 8, FOOTER_HEIGHT / 2)
-footer:SetText("Drag to move, corner to resize. /fscreen hides it, /fscreen pause | play.")
+footer:SetText("Drag to move, corner to resize. /ftv hides it, /ftv pause | play.")
 
 -- One UI unit = one physical pixel, as on the PixelBridge strip, so that a marker cell is exactly 6 px.
 local function ApplyScale()
@@ -73,8 +73,8 @@ local function SavePlace()
     frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
     local width, height = Round(frame:GetWidth()), Round(frame:GetHeight())
     frame:SetSize(width, height)
-    ForeverScreenDB.left, ForeverScreenDB.top = left, top
-    ForeverScreenDB.width, ForeverScreenDB.height = width, height
+    ForeverTVDB.left, ForeverTVDB.top = left, top
+    ForeverTVDB.width, ForeverTVDB.height = width, height
 end
 
 local function StopMoving()
@@ -114,7 +114,7 @@ videoBackground:SetColorTexture(0, 0, 0, 1)
 
 local waiting = video:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 waiting:SetPoint("CENTER", video, "CENTER", 0, 0)
-waiting:SetText("Start the ForeverScreen app. Its picture appears here.")
+waiting:SetText("Start the ForeverTV app. Its picture appears here.")
 
 video:SetScript("OnClick", function()
     clicks = clicks + 1
@@ -178,7 +178,7 @@ stateCell:SetAllPoints(stateHolder)
 
 local tvTuneTexture
 local function ShowPlayState()
-    local paused = ForeverScreenDB and ForeverScreenDB.paused
+    local paused = ForeverTVDB and ForeverTVDB.paused
     if paused then
         stateCell:SetColorTexture(CYAN[1], CYAN[2], CYAN[3], 1)
         playButton:SetText("Play")
@@ -196,12 +196,12 @@ local function ShowPlayState()
 end
 
 local function SetPaused(paused)
-    ForeverScreenDB.paused = paused
+    ForeverTVDB.paused = paused
     ShowPlayState()
 end
 
 playButton:SetScript("OnClick", function()
-    SetPaused(not ForeverScreenDB.paused)
+    SetPaused(not ForeverTVDB.paused)
 end)
 Marker("TOPRIGHT", -BAND, -TITLE_HEIGHT, GREEN, CYAN, MAGENTA)
 Marker("BOTTOMLEFT", BAND, FOOTER_HEIGHT, CYAN, MAGENTA, GREEN)
@@ -210,7 +210,7 @@ Marker("BOTTOMRIGHT", -BAND, FOOTER_HEIGHT, MAGENTA, CYAN, GREEN)
 -- Rails and controls surround the original frame. Brass strips cover only the title/footer interiors;
 -- the video, marker band and state cell keep their original anchors, sizes and colours.
 local function CreateTVSkin()
-    local skin = CreateFrame("Frame", "ForeverScreenTVSkin", frame)
+    local skin = CreateFrame("Frame", "ForeverTVSkin", frame)
     skin:SetAllPoints(frame)
     skin:EnableMouse(false)
     skin:Hide()
@@ -223,7 +223,7 @@ local function CreateTVSkin()
     -- UV rectangles exclude unused atlas pixels. Fixed caps never stretch with the frame.
     local function Art(parent, name, u1, u2, v1, v2)
         local texture = parent:CreateTexture(nil, "ARTWORK")
-        texture:SetTexture("Interface\\AddOns\\ForeverScreen\\art\\" .. name)
+        texture:SetTexture("Interface\\AddOns\\ForeverTV\\art\\" .. name)
         texture:SetTexCoord(u1, u2, v1, v2)
         return texture
     end
@@ -312,23 +312,23 @@ local function CreateTVSkin()
     end
 
     -- Two painted pointer states avoid relying on texture rotation support in Interface 16001.
-    local tune = CreateFrame("Button", "ForeverScreenTVTune", right)
+    local tune = CreateFrame("Button", "ForeverTVTune", right)
     tune:SetPoint("TOPLEFT", right, "TOPLEFT", 6, -8)
     tune:SetSize(48, 48)
     tvTuneTexture = Art(tune, "switches", 0, 0.5, 0, 0.5)
     tvTuneTexture:SetAllPoints(tune)
-    tune:SetScript("OnClick", function() SetPaused(not ForeverScreenDB.paused) end)
+    tune:SetScript("OnClick", function() SetPaused(not ForeverTVDB.paused) end)
     Tooltip(tune, "Play/Pause")
 
-    local power = CreateFrame("Button", "ForeverScreenTVPower", right)
+    local power = CreateFrame("Button", "ForeverTVPower", right)
     power:SetPoint("TOPLEFT", right, "TOPLEFT", 6, -68)
     power:SetSize(48, 48)
     local powerTexture = Art(power, "switches", 0, 0.5, 0.5, 1)
     powerTexture:SetAllPoints(power)
     power:SetScript("OnClick", function() frame:Hide() end)
-    Tooltip(power, "Power off (/fscreen to turn on)")
+    Tooltip(power, "Power off (/ftv to turn on)")
 
-    local crank = CreateFrame("Button", "ForeverScreenTVResize", bottom)
+    local crank = CreateFrame("Button", "ForeverTVResize", bottom)
     crank:SetPoint("BOTTOMRIGHT", bottom, "BOTTOMRIGHT", -6, 0)
     crank:SetSize(32, 32)
     local crankTexture = Art(crank, "switches", 0.5, 1, 0.5, 1)
@@ -365,7 +365,7 @@ local tvSkin = CreateTVSkin()
 local function ApplySkin()
     StopMoving()
     StopSizing()
-    if ForeverScreenDB.skin == "tv" then
+    if ForeverTVDB.skin == "tv" then
         title:Hide()
         playButton:Hide()
         closeButton:Hide()
@@ -385,8 +385,8 @@ local function ApplySkin()
 end
 
 local function Restore()
-    ForeverScreenDB = ForeverScreenDB or {}
-    local db = ForeverScreenDB
+    ForeverTVDB = ForeverTVDB or {}
+    local db = ForeverTVDB
     ApplyScale()
     frame:SetSize(db.width or (DEFAULT_VIDEO_WIDTH + 2 * BAND),
         db.height or (DEFAULT_VIDEO_HEIGHT + TITLE_HEIGHT + FOOTER_HEIGHT + 2 * BAND))
@@ -405,12 +405,12 @@ local function Restore()
     if db.shown then frame:Show() end
 end
 
-frame:SetScript("OnShow", function() ForeverScreenDB.shown = true; Refresh() end)
+frame:SetScript("OnShow", function() ForeverTVDB.shown = true; Refresh() end)
 frame:SetScript("OnHide", function()
     StopMoving()
     StopSizing()
     -- Alt+Z hides UIParent and this frame's OnHide with it; only a real close clears the setting.
-    if UIParent:IsShown() then ForeverScreenDB.shown = false end
+    if UIParent:IsShown() then ForeverTVDB.shown = false end
 end)
 
 local events = CreateFrame("Frame")
@@ -429,18 +429,18 @@ events:SetScript("OnEvent", function(_, event)
     end
 end)
 
-SLASH_FOREVERSCREEN1 = "/fscreen"
-SlashCmdList["FOREVERSCREEN"] = function(message)
+SLASH_FOREVERTV1 = "/ftv"
+SlashCmdList["FOREVERTV"] = function(message)
     local command = string.lower(message or "")
     if command == "pause" then
         SetPaused(true)
     elseif command == "play" then
         SetPaused(false)
     elseif command == "tv" then
-        if ForeverScreenDB.skin == "tv" then
-            ForeverScreenDB.skin = nil
+        if ForeverTVDB.skin == "tv" then
+            ForeverTVDB.skin = nil
         else
-            ForeverScreenDB.skin = "tv"
+            ForeverTVDB.skin = "tv"
         end
         ApplySkin()
     elseif frame:IsShown() then

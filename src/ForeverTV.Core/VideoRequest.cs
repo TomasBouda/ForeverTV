@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace ForeverScreen.Core;
+namespace ForeverTV.Core;
 
 /// <summary>A YouTube video to play: its id, the second to start at, and the playlist it came from, if any.</summary>
 public sealed record VideoRequest(string VideoId, int StartSeconds = 0, string? PlaylistId = null)

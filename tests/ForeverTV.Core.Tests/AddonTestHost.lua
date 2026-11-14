@@ -148,7 +148,7 @@ function methods:GetTop() return 1080 - Bounds(self).top end
 function OriginalGeometry()
     local parts = {}
     for _, object in ipairs(Objects) do
-        if not IsDescendant(object, ForeverScreenTVSkin) then
+        if not IsDescendant(object, ForeverTVSkin) then
             table.insert(parts, tostring(object.width) .. "," .. tostring(object.height) .. "," .. tostring(object.scale))
             for _, point in ipairs(object.points) do
                 table.insert(parts, point[1] .. "," .. point[2].id .. "," .. point[3] .. "," .. point[4] .. "," .. point[5])

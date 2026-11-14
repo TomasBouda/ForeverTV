@@ -12,12 +12,13 @@
 - Painted app and extension icon: the golden TV in a gold frame on a blue background.
 - Integrated TV controls with hover tooltips: TUNE plays/pauses with two painted pointer states, the power switch
   hides the frame, and a bottom-right brass crank resizes it.
-- Optional goblin TV casing for the addon, toggled with `/fscreen tv` and remembered between sessions.
+- Optional goblin TV casing for the addon, toggled with `/ftv tv` and remembered between sessions.
 - Prototype: a video window that follows a frame in WoW Forever and lets clicks through to it.
-- Play/pause from the addon: a title bar button and `/fscreen pause | play`, also in combat.
+- Play/pause from the addon: a title bar button and `/ftv pause | play`, also in combat.
 - `--mute` starts the video muted.
 
 ### Changes
+- Renamed from ForeverScreen to ForeverTV: addon ForeverTV with `/ftv`, app ForeverTV.exe, extension ForeverTV - Play in WoW. Settings and the pairing token move over on the first start.
 - The video stays visible when WoW is not the active window (for example a browser on another monitor); windows over WoW cover it, and it hides with a minimized WoW.
 - TV mode hides the plain controls, counters, help and waiting text, filling title/footer interiors with brass
   bezel art. Turning TV mode off restores the original UI.

@@ -1,6 +1,6 @@
-using ForeverScreen.Core;
+using ForeverTV.Core;
 
-namespace ForeverScreen.Core.Tests;
+namespace ForeverTV.Core.Tests;
 
 public class VideoRequestTests
 {
@@ -47,8 +47,8 @@ public class VideoRequestTests
     [Fact]
     public void Builds_the_embed_address()
     {
-        var url = new VideoRequest("dQw4w9WgXcQ", 90, "PLabc").EmbedUrl("https://foreverscreen.local", muted: true);
-        Assert.Equal("https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&origin=https%3A%2F%2Fforeverscreen.local&start=90&list=PLabc&mute=1", url);
+        var url = new VideoRequest("dQw4w9WgXcQ", 90, "PLabc").EmbedUrl("https://forevertv.local", muted: true);
+        Assert.Equal("https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&origin=https%3A%2F%2Fforevertv.local&start=90&list=PLabc&mute=1", url);
     }
 }
 

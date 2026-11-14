@@ -1,7 +1,7 @@
-// Talks to the ForeverScreen tray app on 127.0.0.1 (ADR 0006). No chrome.* here, so node tests can run it.
+// Talks to the ForeverTV tray app on 127.0.0.1 (ADR 0006). No chrome.* here, so node tests can run it.
 
 export const DEFAULT_PORT = 5241;
-export const TOKEN_HEADER = 'X-ForeverScreen-Token';
+export const TOKEN_HEADER = 'X-ForeverTV-Token';
 
 export function normalizeSettings(stored) {
   const port = Number(stored?.port);
@@ -56,16 +56,16 @@ export function describe(result) {
   switch (result.kind) {
     case 'ok':
       return result.data && result.data.tvVisible === false
-        ? 'Sent to ForeverScreen. Open the TV in WoW (/fscreen) to start it.'
+        ? 'Sent to ForeverTV. Open the TV in WoW (/ftv) to start it.'
         : 'Playing in WoW.';
     case 'unpaired':
-      return 'Not paired: ForeverScreen tray menu, Pair browser, then paste the token in the extension options.';
+      return 'Not paired: ForeverTV tray menu, Pair browser, then paste the token in the extension options.';
     case 'offline':
-      return 'ForeverScreen is not running. Start it, then try again.';
+      return 'ForeverTV is not running. Start it, then try again.';
     case 'bad':
       return (result.data && result.data.error) || 'Not a YouTube video.';
     default:
-      return `ForeverScreen answered ${result.status}. See its log (tray menu, Logs).`;
+      return `ForeverTV answered ${result.status}. See its log (tray menu, Logs).`;
   }
 }
 

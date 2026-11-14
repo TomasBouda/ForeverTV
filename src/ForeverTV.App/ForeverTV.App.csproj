@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- A tray app without a console; the log is in %LOCALAPPDATA%\ForeverScreen\logs and in the tray menu. -->
+    <!-- A tray app without a console; the log is in %LOCALAPPDATA%\ForeverTV\logs and in the tray menu. -->
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>ForeverScreen</AssemblyName>
+    <AssemblyName>ForeverTV</AssemblyName>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
@@ -16,6 +16,6 @@
     <PackageReference Include="TomLabs.PixelBridge.Host" Version="0.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ForeverScreen.Core\ForeverScreen.Core.csproj" />
+    <ProjectReference Include="..\ForeverTV.Core\ForeverTV.Core.csproj" />
   </ItemGroup>
 </Project>

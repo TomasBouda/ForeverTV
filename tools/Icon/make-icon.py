@@ -39,9 +39,9 @@ def from_painted():
 square = from_painted() if PAINTED.exists() else from_master()
 icon = square.resize((256, 256), Image.LANCZOS)
 icon.save(ROOT / "icon.png")
-icon.save(ROOT / "src" / "ForeverScreen.App" / "icon.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+icon.save(ROOT / "src" / "ForeverTV.App" / "icon.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
 icons = ROOT / "extension" / "icons"
 icons.mkdir(parents=True, exist_ok=True)
 for size in (16, 32, 48, 128):
     square.resize((size, size), Image.LANCZOS).save(icons / f"icon-{size}.png")
-print("wrote icon.png, src/ForeverScreen.App/icon.ico and extension/icons from", PAINTED.name if PAINTED.exists() else "tv-painted.png")
+print("wrote icon.png, src/ForeverTV.App/icon.ico and extension/icons from", PAINTED.name if PAINTED.exists() else "tv-painted.png")
