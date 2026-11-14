@@ -88,6 +88,27 @@ Measurements go to `%LOCALAPPDATA%\ForeverTV\logs` and to the tray menu's Logs w
 
 Icons (app `icon.png`/`icon.ico` and `extension/icons`): `py tools/Icon/make-icon.py`. It uses `tools/Icon/icon-painted.png` when that file exists, otherwise the painted TV master.
 
+## Releases
+
+One version for app, addon and extension: `VersionPrefix` in `Directory.Build.props` (see
+[ADR 0010](docs/decisions/0010-release-pipeline.md)). Every push to master refreshes the `nightly` pre-release.
+To release: rename the CHANGELOG heading to `## x.y.z — date`, set `VersionPrefix`, commit, then push the tag.
+
+```powershell
+git tag v0.1.0; git push origin v0.1.0
+```
+
+The tag publishes `ForeverTV-win-x64.zip` (portable exe, updates itself), the addon zip to CurseForge and the
+extension to the Chrome Web Store, and attaches both zips to the GitHub release. Package locally without uploading:
+
+```powershell
+./tools/Publish-CurseForge.ps1 -DryRun; ./tools/Publish-ChromeWebStore.ps1 -DryRun
+```
+
+Repository settings: secrets `UPDATE_SIGNING_KEY`, `CURSEFORGE_API_TOKEN`, `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`,
+`CWS_REFRESH_TOKEN`; variables `CWS_PUBLISHER_ID`, `CWS_EXTENSION_ID`. Store listing texts are in
+[docs/store](docs/store/chrome-web-store.md); [PRIVACY.md](PRIVACY.md) is the extension's privacy policy.
+
 ## License
 
 [MIT](LICENSE). Not affiliated with or endorsed by Blizzard Entertainment. The addon reads nothing from the game and the app sends nothing into it; the video window only follows a frame the addon draws.

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ForeverTV.Core;
+using TomLabs.AutoUpdate;
 using TomLabs.PixelBridge.Host;
 
 namespace ForeverTV.App;
@@ -96,6 +97,22 @@ internal static class Program
         var screen = new ScreenControl(overlay, PlayNow, SetPausedNow, () => new ScreenStatus(
             overlay.Current?.VideoId, currentTitle, overlay.Playing, Volatile.Read(ref tvVisible), overlay.Muted));
 
+        // Self-update from GitHub Releases (ADR 0010): checks quietly, downloads, and the tray menu offers the restart.
+        using var updater = Updater.Start(new UpdateOptions("ForeverTV", new GitHubReleasesSource("TomasBouda", "ForeverTV"))
+        {
+            PublicKeyPem = UpdateKey.PublicKeyPem,
+            Log = line => Report($"Update: {line}"),
+            ExitApplication = () => Post(() => overlay.Close()),
+            RelaunchArguments = SingleInstance.AfterUpdate,
+        });
+        var announced = false;
+        updater.StateChanged += (_, _) => Post(() =>
+        {
+            if (updater.State != UpdateState.ReadyToInstall || announced) return;
+            announced = true;
+            Toast($"ForeverTV {updater.Available?.Version} is ready. Tray menu: Update and restart.");
+        });
+
         BuildMenu();
         tray.ContextMenuStrip.Opening += (_, _) => BuildMenu();
         tray.MouseClick += (_, e) =>
@@ -163,6 +180,20 @@ internal static class Program
                 Toast($"Pairing token copied. Paste it in the extension's options (port {settings.Port}).");
             }));
             menu.Items.Add(new ToolStripMenuItem("Start with Windows", null, (_, _) => StartWithWindows.Set(!StartWithWindows.IsOn, Report)) { Checked = StartWithWindows.IsOn });
+            if (updater.State == UpdateState.ReadyToInstall)
+                menu.Items.Add(new ToolStripMenuItem($"Update to {updater.Available?.Version} and restart", null, (_, _) => updater.ApplyAndRestart()));
+            else if (updater.State != UpdateState.Disabled)
+                menu.Items.Add(new ToolStripMenuItem(updater.State switch
+                {
+                    UpdateState.Checking => "Checking for updates...",
+                    UpdateState.Downloading => $"Downloading {updater.Available?.Version}...",
+                    _ => "Check for updates",
+                }, null, async (_, _) =>
+                {
+                    var found = await updater.CheckAsync();
+                    if (!found && updater.State == UpdateState.UpToDate) Toast($"ForeverTV {version} is the latest.");
+                    else if (updater.State == UpdateState.Failed) Toast($"Update check failed: {updater.Error}", ToolTipIcon.Warning);
+                }) { Enabled = updater.State is not (UpdateState.Checking or UpdateState.Downloading) });
             menu.Items.Add(new ToolStripMenuItem("Logs", null, (_, _) => new LogWindow(logFolder).Show()));
             menu.Items.Add(new ToolStripMenuItem("Exit", null, (_, _) => overlay.Close()));
         }

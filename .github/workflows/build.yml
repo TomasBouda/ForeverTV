@@ -1,0 +1,48 @@
+name: Build
+
+# Tests every push and pull request. A push to master also refreshes the rolling "nightly" pre-release that the
+# app's updater follows on the nightly channel (docs/decisions/0010-release-pipeline.md).
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: dotnet test ForeverTV.slnx -c Release
+      - run: node --test extension/test/extension.test.mjs
+      - name: Package addon and extension
+        shell: pwsh
+        run: |
+          ./tools/Build-Addon.ps1
+          ./tools/Build-Extension.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: addon-and-extension
+          path: artifacts/*.zip
+
+  nightly:
+    if: github.event_name == 'push'
+    needs: test
+    uses: TomasBouda/TomLabs.AutoUpdate/.github/workflows/publish-app.yml@master
+    with:
+      project: src/ForeverTV.App/ForeverTV.App.csproj
+      app-name: ForeverTV
+      channel: nightly
+      submodules: false
+    secrets:
+      signing-key: ${{ secrets.UPDATE_SIGNING_KEY }}

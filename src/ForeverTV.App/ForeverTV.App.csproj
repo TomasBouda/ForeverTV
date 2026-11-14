@@ -8,14 +8,40 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Released as one portable exe per RID through TomLabs.AutoUpdate's publish-app.yml (ADR 0010). -->
+    <SelfContained Condition="'$(RuntimeIdentifier)' != ''">true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
   </PropertyGroup>
   <ItemGroup>
     <!-- Kestrel for the local API on 127.0.0.1 that the browser extension calls. -->
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.*" />
     <PackageReference Include="TomLabs.PixelBridge.Host" Version="0.3.2" />
+    <PackageReference Include="TomLabs.AutoUpdate" Version="0.3.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ForeverTV.Core\ForeverTV.Core.csproj" />
   </ItemGroup>
+
+  <!--
+    Version shown in the tray menu and /health: a working build is "0.1.0-dev+<short commit>", the CI nightly
+    "0.1.0-nightly.<short commit>" (VersionSuffix from publish-app.yml), a build of the tag v0.1.0 is "0.1.0".
+  -->
+  <Target Name="StampBuildVersion" BeforeTargets="GetAssemblyAttributes;GenerateAssemblyInfo" Condition="'$(VersionSuffix)' == ''">
+    <Exec Command="git rev-parse --short HEAD" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" StandardOutputImportance="low" StandardErrorImportance="low" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitShortSha" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitShaExit" />
+    </Exec>
+    <Exec Command="git describe --tags --exact-match HEAD" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" StandardOutputImportance="low" StandardErrorImportance="low" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitTag" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitTagExit" />
+    </Exec>
+    <PropertyGroup Condition="'$(_GitShaExit)' == '0' And '$(_GitShortSha)' != ''">
+      <InformationalVersion>$(Version)-dev+$(_GitShortSha)</InformationalVersion>
+      <InformationalVersion Condition="('$(_GitTagExit)' == '0' And '$(_GitTag)' == 'v$(Version)') Or '$(GITHUB_REF)' == 'refs/tags/v$(Version)'">$(Version)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
 </Project>

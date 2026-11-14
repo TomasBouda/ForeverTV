@@ -1,0 +1,8 @@
+{
+  "displayName": "ForeverTV",
+  "tagline": "Watch YouTube on a goblin TV inside WoW Forever, sent from your browser with one click",
+  "tags": ["windows", "tray", "wow", "youtube", "addon", "browser-extension"],
+  "audience": "Public",
+  "repoUrl": "https://github.com/TomasBouda/ForeverTV",
+  "homepage": "https://github.com/TomasBouda/ForeverTV"
+}

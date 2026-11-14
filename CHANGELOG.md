@@ -3,6 +3,7 @@
 ## 0.1.0-dev — unreleased
 
 ### Features
+- Releases: the app updates itself from GitHub Releases (tray menu, Update and restart); the addon goes to CurseForge and the extension to the Chrome Web Store from the same version tag.
 - Browser extension for Edge and Chrome: Play in WoW from a button in the YouTube player bar, the toolbar icon or the right-click menu; continues from the same second and pauses the browser tab.
 - Extension options page to pair with the tray app and test the connection.
 - Tray app instead of the console: Paste YouTube link, Recent videos, Play/Pause, Mute, Logs and an optional Start with Windows.

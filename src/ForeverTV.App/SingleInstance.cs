@@ -9,6 +9,9 @@ namespace ForeverTV.App;
 /// </summary>
 internal sealed class SingleInstance : IDisposable
 {
+    /// <summary>The argument the updater restarts the app with.</summary>
+    public const string AfterUpdate = "--after-update";
+
     private static readonly string Name = "ForeverTV-" + Environment.UserName;
     private readonly Mutex _mutex;
     private readonly CancellationTokenSource _stop = new();
@@ -20,6 +23,18 @@ internal sealed class SingleInstance : IDisposable
     {
         var mutex = new Mutex(true, @"Local\" + Name, out var first);
         if (first) return new SingleInstance(mutex);
+        // The build that an update has just put in place starts while the old one is still exiting: wait for it.
+        if (args.Contains(AfterUpdate))
+        {
+            try
+            {
+                if (mutex.WaitOne(TimeSpan.FromSeconds(20))) return new SingleInstance(mutex);
+            }
+            catch (AbandonedMutexException)
+            {
+                return new SingleInstance(mutex);
+            }
+        }
         mutex.Dispose();
         try
         {
