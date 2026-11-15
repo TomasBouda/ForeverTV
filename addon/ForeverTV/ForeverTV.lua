@@ -1,7 +1,7 @@
--- ForeverTV prototype. Draws a frame with four corner markers; the desktop app finds them on the screen and lays
--- its click-through video window over the black area. Clicks on the video therefore land here. The counters in the
--- title bar show whether they do, also in combat. The only thing the app reads besides the position is the play state
--- cell right of the top-left marker. No game data is read or shown to the app.
+-- ForeverTV. Draws a frame with four corner markers; the desktop app finds them on the screen and lays its
+-- click-through video window over the black area, so clicks on the video land here, also in combat. The only thing
+-- the app reads besides the position is the play state cell right of the top-left marker. No game data is read or
+-- shown to the app.
 
 local TITLE_HEIGHT = 26
 local FOOTER_HEIGHT = 22
@@ -14,7 +14,6 @@ local DEFAULT_VIDEO_WIDTH, DEFAULT_VIDEO_HEIGHT = 640, 360
 -- The colours and their order per corner must match MarkerDetector.cs.
 local MAGENTA, GREEN, CYAN = { 1, 0, 1 }, { 0, 1, 0 }, { 0, 1, 1 }
 
-local clicks, wheels, combatClicks, moves = 0, 0, 0, 0
 local PLAY_BUTTON_WIDTH = 64
 
 local frame = CreateFrame("Frame", "ForeverTVFrame", UIParent)
@@ -60,9 +59,7 @@ local function Round(value)
 end
 
 local function Refresh()
-    local inCombat = InCombatLockdown() and "yes" or "no"
-    title:SetText("Clicks " .. clicks .. "  in combat " .. combatClicks .. "  wheel " .. wheels
-        .. "  moves " .. moves .. "  combat: " .. inCombat)
+    title:SetText("ForeverTV")
 end
 
 local function SavePlace()
@@ -81,7 +78,6 @@ local function StopMoving()
     if frame.moving then
         frame.moving = false
         frame:StopMovingOrSizing()
-        moves = moves + 1
         SavePlace()
         Refresh()
     end
@@ -116,15 +112,9 @@ local waiting = video:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 waiting:SetPoint("CENTER", video, "CENTER", 0, 0)
 waiting:SetText("Start the ForeverTV app. Its picture appears here.")
 
-video:SetScript("OnClick", function()
-    clicks = clicks + 1
-    if InCombatLockdown() then combatClicks = combatClicks + 1 end
-    Refresh()
-end)
-video:SetScript("OnMouseWheel", function()
-    wheels = wheels + 1
-    Refresh()
-end)
+-- Swallow clicks and the wheel on the video so they do not fall through to the world under the frame.
+video:SetScript("OnClick", function() end)
+video:SetScript("OnMouseWheel", function() end)
 video:SetScript("OnDragStart", function()
     frame.moving = true
     frame:StartMoving()

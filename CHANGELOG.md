@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-dev — unreleased
+## 0.1.0 — 2026-11-15
 
 ### Features
 - Releases: the app updates itself from GitHub Releases (tray menu, Update and restart); the addon goes to CurseForge and the extension to the Chrome Web Store from the same version tag.
@@ -19,6 +19,7 @@
 - `--mute` starts the video muted.
 
 ### Changes
+- The plain frame shows "ForeverTV" in its title bar instead of the prototype click counters.
 - Renamed from ForeverScreen to ForeverTV: addon ForeverTV with `/ftv`, app ForeverTV.exe, extension ForeverTV - Play in WoW. Settings and the pairing token move over on the first start.
 - The video stays visible when WoW is not the active window (for example a browser on another monitor); windows over WoW cover it, and it hides with a minimized WoW.
 - TV mode hides the plain controls, counters, help and waiting text, filling title/footer interiors with brass

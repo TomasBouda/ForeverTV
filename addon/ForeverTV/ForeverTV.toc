@@ -2,7 +2,7 @@
 ## Title: ForeverTV
 ## Notes: Prototype: a frame with corner markers that the ForeverTV desktop app follows with its video window. /ftv
 ## Author: Tomas Bouda
-## Version: 0.1.0-dev
+## Version: 0.1.0
 ## SavedVariables: ForeverTVDB
 ## X-Curse-Project-ID: 1805915
 
