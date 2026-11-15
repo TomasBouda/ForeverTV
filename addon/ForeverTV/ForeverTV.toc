@@ -4,5 +4,6 @@
 ## Author: Tomas Bouda
 ## Version: 0.1.0-dev
 ## SavedVariables: ForeverTVDB
+## X-Curse-Project-ID: 1805915
 
 ForeverTV.lua
